@@ -1,0 +1,50 @@
+---
+Name: net.exe
+Description: Windows built-in command-line tool for managing network resources and connections
+Aliases:
+  - Alias: net1.exe
+Author: Microsoft Corporation
+Created: 1985-01-01
+Commands:
+  - Command: net use X: \\webdav.server\share
+    Description: Mounts a WebDAV share as a network drive, allowing remote file access through drive letter mapping
+    Usecase: Enables mounting remote WebDAV shares as local drives to access files and bypass network restrictions
+    Category: Download
+    Privileges: User
+    MitreID: T1105
+    OperatingSystem: Windows XP, Windows 7, Windows 8, Windows 10, Windows 11
+    Tags:
+      - Network: WebDAV
+      - Protocol: HTTP/HTTPS
+  - Command: net use O: \\webdav.server\share /PERSISTENT:YES
+    Description: Creates a persistent WebDAV drive mapping that survives system reboots
+    Usecase: Establishes persistent access to remote WebDAV resources
+    Category: Persistence
+    Privileges: User
+    MitreID: T1547
+    OperatingSystem: Windows XP, Windows 7, Windows 8, Windows 10, Windows 11
+Full_Path:
+  - Path: C:\Windows\System32\net.exe
+  - Path: C:\Windows\SysWOW64\net.exe
+Code_Sample:
+  - Code: |
+	  net use X: https://live.sysinternals.com/tools
+      net use X: \\webdav.server\share
+      net use X: \\webdav.server\share /user:username password
+      net use X: \\webdav.server\share /PERSISTENT:YES
+Detection:
+  - IOC: Event ID 4648 - Explicit credentials used for outbound connection
+  - IOC: Event ID 4624 - Network drive mapped using WebDAV
+  - IOC: Network connections to WebDAV ports (80/443)
+  - Analysis: https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/net-use
+  - Sigma: Suspicious WebDAV Drive Mapping via Net.exe https://github.com/onuratali/Sigma-Rule/blob/main/Suspicious%20WebDAV%20Drive%20Mapping%20via%20Net.exe
+  - Elastic: WebDAV Network Drive Mount Detection
+  - Splunk: Detect WebDAV Drive Mapping Activity
+  - BlockRule: Block WebDAV protocols at network boundary
+Resources:
+  - Link: https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/net
+  - Link: https://attack.mitre.org/techniques/T1105/
+  - Link: https://attack.mitre.org/techniques/T1547/
+Acknowledgement:
+  - Person: Bogac KAYA
+    Handle: https://www.linkedin.com/in/bogackaya/
